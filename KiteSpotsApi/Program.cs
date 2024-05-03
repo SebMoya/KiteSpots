@@ -2,6 +2,7 @@ using Common.DTO;
 using Common.Interface;
 using DataAccess;
 using DataAccess.Entities;
+using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,6 @@ builder.Services.AddDbContext<KiteSpotsDbContext>(options =>
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.UseFastEndpoints();
 
 app.Run();
