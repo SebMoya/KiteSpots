@@ -26,5 +26,4 @@ public class Spot
     public double Longitude { get; set; }
 
     public string Area { get; set; }
-
 }

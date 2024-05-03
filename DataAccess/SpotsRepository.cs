@@ -6,7 +6,6 @@ namespace DataAccess;
 
 public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
 {
-
     public async Task<IEnumerable<Spot>> GetAllSpots()
     {
         return await _context.Spots.ToListAsync();
@@ -14,7 +13,14 @@ public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
 
     public async Task<Spot> GetOneSpot(int id)
     {
-        return await _context.Spots.FirstOrDefaultAsync(x => x.Id == id);
+        var spot = await _context.Spots.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (spot is null)
+        {
+            return null;
+        }
+
+        return spot;
     }
 
     public async Task<Spot> CreateSpot(Spot newSpot)
