@@ -1,6 +1,9 @@
-﻿namespace DataAccess;
+﻿using Common.Interface;
+using DataAccess.Entities;
 
-public class SpotsRepository
+namespace DataAccess;
+
+public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
 {
     
 }
