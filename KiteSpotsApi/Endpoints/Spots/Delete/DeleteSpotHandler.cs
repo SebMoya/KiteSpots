@@ -15,16 +15,8 @@ public class DeleteSpotHandler(ISpotService<Spot> repo) : Endpoint<int, bool>
 
     public override async Task HandleAsync(int req, CancellationToken ct)
     {
-        var spots = await repo.GetAllSpots();
+        var result = await repo.DeleteSpot(req);
 
-        var selectedSpot = spots.FirstOrDefault(x => x.Id == req);
-
-        if (selectedSpot is null)
-        {
-            SendAsync(false, cancellation: ct);
-        }
-
-        await repo.DeleteSpot(req);
-        SendAsync(true, cancellation: ct);
+        SendAsync(result, cancellation: ct);
     }
 }

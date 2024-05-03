@@ -30,9 +30,9 @@ public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
         return newSpot;
     }
 
-    public async Task<Spot> UpdateSpot(int id, Spot updatedSpot)
+    public async Task<Spot> UpdateSpot(Spot updatedSpot)
     {
-        var spot = await _context.Spots.FirstOrDefaultAsync(x => x.Id == id);
+        var spot = await _context.Spots.FirstOrDefaultAsync(x => x.Id == updatedSpot.Id);
         if (spot == null)
         {
             return null;

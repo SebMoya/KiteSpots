@@ -14,7 +14,7 @@ public class GetAllSpotsHandler(ISpotService<Spot> repo) : Endpoint<EmptyRequest
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var spots = await repo.GetAllSpots();
+        var spots = await repo.GetAllSpots();   
 
         SendAsync(spots, cancellation: ct);
     }

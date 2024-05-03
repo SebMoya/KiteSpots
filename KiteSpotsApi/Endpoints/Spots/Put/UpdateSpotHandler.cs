@@ -4,7 +4,7 @@ using FastEndpoints;
 
 namespace KiteSpotsApi.Endpoints.Spots.Put;
 
-public class UpdateSpotHandler(ISpotService<Spot> repo) : Endpoint<int, Spot>
+public class UpdateSpotHandler(ISpotService<Spot> repo) : Endpoint<Spot, Spot>
 {
     public override void Configure()
     {
@@ -12,10 +12,8 @@ public class UpdateSpotHandler(ISpotService<Spot> repo) : Endpoint<int, Spot>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(int req, Spot spot,CancellationToken ct)
+    public override async Task HandleAsync(Spot spot,CancellationToken ct)
     {
-        await repo.UpdateSpot
-
-        SendAsync(await repo.UpdateSpot(req, spot), cancellation: ct);
+        SendAsync(await repo.UpdateSpot(spot), cancellation: ct);
     }
 }

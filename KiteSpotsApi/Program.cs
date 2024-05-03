@@ -14,6 +14,8 @@ builder.Services.AddScoped<ISpotService<Spot>, SpotsRepository>();
 builder.Services.AddDbContext<KiteSpotsDbContext>(options =>
        options.UseSqlServer(connectionString));
 
+builder.Services.AddFastEndpoints();
+
 var app = builder.Build();
 
 app.UseFastEndpoints();

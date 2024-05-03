@@ -8,7 +8,7 @@ public class GeOneSpotHandler(ISpotService<Spot> repo) : Endpoint<int, Spot>
 {
     public override void Configure()
     {
-        Get("/kite/spots");
+        Get("/kite/spots/");
         AllowAnonymous();
     }
 

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(KiteSpotsDbContext))]
-    [Migration("20240503121445_init")]
+    [Migration("20240503165024_init")]
     partial class init
     {
         /// <inheritdoc />
