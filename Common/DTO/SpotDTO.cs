@@ -8,7 +8,7 @@ public class SpotDTO
 
     public string Description { get; set; }
 
-    public List<string> Properties { get; set; }
+    public List<SpotPropertiesDTO> Properties { get; set; }
 
     public string Image { get; set; }
 

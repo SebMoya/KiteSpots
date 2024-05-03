@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DataAccess.Enum;
 
 namespace DataAccess.Entities;
 
@@ -11,7 +12,7 @@ public class Spot
 
     public string Description { get; set; }
 
-    public List<string> Properties { get; set; }
+    public List<SpotProperties> Properties { get; set; }
 
     public string Image { get; set; }
 
