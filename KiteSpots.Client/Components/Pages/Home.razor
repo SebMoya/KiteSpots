@@ -1,7 +1,57 @@
 ﻿@page "/"
+@using Common.DTO
+@using KiteSpots.Client.Services
+@inject SpotService spotService
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Spotguide</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container">
+    <div class="row">
+        <Virtualize Items="spots" Context="spot">
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <label>Spot Name</label>
+                        <h5 class="card-title">@spot.Name</h5>
+                        <label>Description</label>
+                        <p class="card-text">
+                            @spot.Description</p>
+                            <label>Spot properties</label>
+                            @foreach (var prop in spot.Properties)
+                            {
+                            <p class="card-text">@prop</p>
+                            }
+                            <label>Wind directions</label>
+                            <label>wind great</label>
+                            @foreach (var wind in spot.WindDirectionGood)
+                            {
+                                <p class="card-text">@wind</p>
+                            }
+                            <label>wind ok</label>
+                            @foreach (var wind in spot.WindDirectionOk)
+                            {
+                                <p class="card-text">@wind</p>
+                            }
+                            <label>wind bad</label>
+                            @foreach (var wind in spot.WindDirectionBad)
+                            {
+                                <p class="card-text">@wind</p>
+                            }
+                        <label>Area</label>
+                        <p class="card-text">@spot.Area</p>
+                    </div>
+                </div>
+            </div>
+        </Virtualize>
+    </div>
+</div>
 
-Welcome to your new app.
+@code {
+    private List<SpotDTO> spots = new List<SpotDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        spots.AddRange(await spotService.GetAllSpots());
+    }
+}

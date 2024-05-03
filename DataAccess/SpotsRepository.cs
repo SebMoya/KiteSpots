@@ -60,7 +60,6 @@ public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
         {
             return false;
         }
-
         _context.Spots.Remove(spot);
         await _context.SaveChangesAsync();
         return true;

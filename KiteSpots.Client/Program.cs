@@ -1,6 +1,9 @@
+using Common.DTO;
+using Common.Interface;
 using KiteSpots.Client.Components;
 using KiteSpots.Client.Components.Account;
 using KiteSpots.Client.Data;
+using KiteSpots.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,11 +32,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+builder.Services.AddHttpClient("KiteSpotsApi", client => {
+    client.BaseAddress = new Uri(builder.Configuration["KiteSpotsApiBaseAdress"]);
+    });
+
+builder.Services.AddScoped<SpotService>();
 
 var app = builder.Build();
 
