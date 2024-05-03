@@ -24,6 +24,7 @@ public class DeleteSpotHandler(ISpotService<Spot> repo) : Endpoint<int, bool>
             SendAsync(false, cancellation: ct);
         }
 
+        await repo.DeleteSpot(req);
         SendAsync(true, cancellation: ct);
     }
 }

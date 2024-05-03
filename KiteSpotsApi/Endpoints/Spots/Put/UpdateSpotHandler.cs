@@ -8,19 +8,14 @@ public class UpdateSpotHandler(ISpotService<Spot> repo) : Endpoint<int, Spot>
 {
     public override void Configure()
     {
-        Get("/kite/spots");
+        Put("/kite/spots");
         AllowAnonymous();
     }
 
-
-    public override async Task HandleAsync(int req, CancellationToken ct)
+    public override async Task HandleAsync(int req, Spot spot,CancellationToken ct)
     {
-        var spots = await repo.GetAllSpots();
+        await repo.UpdateSpot
 
-        var selectedSpot = spots.FirstOrDefault(x => x.Id == req);
-
-        SendAsync(selectedSpot, cancellation: ct);
+        SendAsync(await repo.UpdateSpot(req, spot), cancellation: ct);
     }
-{
-    
 }
