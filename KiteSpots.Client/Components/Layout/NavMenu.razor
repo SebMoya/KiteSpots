@@ -2,7 +2,7 @@
 
 
 <div class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <h1 class="text-white mr-3">Spotguide</h1>
+    <h1 class="text-white mr-3">Spotguide</h1>
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,6 +10,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
+                <AuthorizeView Roles="Admin">
+                    <li class="nav-item">
+                        <a class="px-3 text-white text-decoration-none" href="Admin">Administration</a>
+                    </li>
+                </AuthorizeView>
                 <label for="Area">Välj område</label>
                 <select name="Area" id="AreaSelector">
                     <option value="Skane">Skåne</option>
@@ -76,6 +81,7 @@
             </ul>
         </div>
     </div>
+    <a class="text-white ml-1 text-decoration-none" href="Auth"><h4>Logga in</h4></a>
 </div>
 
 @code {
