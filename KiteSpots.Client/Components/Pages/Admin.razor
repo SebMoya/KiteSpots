@@ -8,108 +8,240 @@
 
 @attribute [Authorize(Roles = "Admin")]
 
-<h1>Admin</h1>
+<h1>Admin Page</h1>
 
-<h3>Existing spots</h3>
+<h3>Spottar</h3>
 
-<Virtualize Items="spots" Context="spot">
-    <div class="col-md-3 mb-4">
-    <div class="card">
-        <div class="card-body">
-            <label>Spot Name></label>
-            <h5 class="card-title"><button class="btn btn-primary" @onclick="() => SelectSpot(spot)">@spot.Name</button></h5>
+<div class="row row-cols-1 g-3">
+    <Virtualize Items="spots" Context="spot">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@spot.Name</h5>
+                    <p class="card-text">@spot.Description</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="() => SelectSpot(spot)">Ändra information</button>
+                </div>
+            </div>
         </div>
-    </div>
-    </div>
+        @* div class="col-lg-4 mb-4">
+        <div class="list-group">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><button class="btn-light" @onclick="() => SelectSpot(spot)">@spot.Name</button></h5>
+            </div>
+        </div>
+    </div> *@
     </Virtualize>
+</div>
 
-<h3>New Spot</h3>
-<EditForm FormName="ProductForm" Model="NewSpot" OnValidSubmit="SaveSpot">
-    <label>Name</label>
-    <InputText @bind-Value="NewSpot.Name"></InputText>
-    <label>Description</label>
-    <InputText @bind-Value="NewSpot.Description"></InputText>
-    <label>Image</label>
-    <InputText @bind-Value="NewSpot.Image"></InputText>
-    <label>Wind Directions</label>
-    <label>Good Wind Directions</label>
-    <InputText @bind-Value="property"></InputText>
-    <button @onclick="AddWindDirection">Add</button>
-    <label>Ok Wind Directions</label>
-    <InputText @bind-Value="property"></InputText>
-    <button @onclick="AddWindDirection">Add</button>
-    <label>Bad Wind Directions</label>
-    <InputText @bind-Value="property"></InputText>
-    <button @onclick="AddWindDirection">Add</button>
-    <label>Latitude</label>
-    <InputNumber @bind-Value="NewSpot.Latitude"></InputNumber>
-    <label>Longitude</label>
-    <InputNumber @bind-Value="NewSpot.Longitude"></InputNumber>
-    <label>Area</label>
-    <InputText @bind-Value="NewSpot.Area"></InputText>
-    <label>Properties</label>
-    <InputText @bind-Value="property"></InputText>
-    <button @onclick="AddProperty">Add</button>
-    <button class="btn btn-primary" type="submit">Add or Change</button>
- @*    <ul>
-        @foreach (var prop in SelectedSpot.Properties)
+<h3>Ändra/Lägg till</h3>
+<div class="col-lg-6">
+    <div class="card p-3">
+        <h3 class="fw-bold mb-4">Ändra information om spot</h3>
+
+        <EditForm Model="NewSpot" OnValidSubmit="SaveSpot">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label for="Name" class="form-label">SpotNamn:</label>
+                <InputText id="Name" @bind-Value="NewSpot.Name" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Description" class="form-label">Beskrivning:</label>
+                <InputText id="Description" @bind-Value="NewSpot.Description" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Image" class="form-label">Bild:</label>
+                <InputText id="Image" @bind-Value="NewSpot.Image" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Vindriktningar:</label>
+                <div class="row">
+                    <div class="col">
+                        <label for="GoodWindDirections" class="form-label">Bra vindriktningar:</label>
+                        <ul class="list-group">
+                            @if (NewSpot.WindDirectionGood != null)
+                            {
+                                @foreach (var windDirection in NewSpot.WindDirectionGood)
+                                {
+                                    <li class="list-group-item">@windDirection</li>
+                                }
+                            }
+                        </ul>
+                        <div class="input-group mt-2">
+                            <InputText @bind-Value="newWindDirection" class="form-control" placeholder="Lägg till ny bra vindriktning" />
+                            <button class="btn btn-primary" @onclick="AddGoodWindDirection">Lägg till</button>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <label for="OkWindDirection" class="form-label">Ok vindriktningar:</label>
+                        <ul class="list-group">
+                            @if (NewSpot.WindDirectionOk != null)
+                            {
+                                @foreach (var windDirection in NewSpot.WindDirectionOk)
+                                {
+                                    <li class="list-group-item">@windDirection</li>
+                                }
+                            }
+                        </ul>
+                        <div class="input-group mt-2">
+                            <InputText @bind-Value="newWindDirection" class="form-control" placeholder="Lägg till ny ok vindriktning" />
+                            <button class="btn btn-primary" @onclick="AddOkWindDirection">Lägg till</button>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <label for="BadWindDirection" class="form-label">Dåliga vindriktningar:</label>
+                        <ul class="list-group">
+                            @if (NewSpot.WindDirectionBad != null)
+                            {
+                                @foreach (var windDirection in NewSpot.WindDirectionBad)
+                                {
+                                    <li class="list-group-item">@windDirection</li>
+                                }
+                            }
+                        </ul>
+                        <div class="input-group mt-2">
+                            <InputText @bind-Value="newWindDirection" class="form-control" placeholder="Lägg till ny ok vindriktning" />
+                            <button class="btn btn-primary" @onclick="AddBadWindDirection">Lägg till</button>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="Latitude" class="form-label">Latitud:</label>
+                <InputNumber id="Latitude" @bind-Value="NewSpot.Latitude" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Longitude" class="form-label">Longitud:</label>
+                <InputNumber id="Longitude" @bind-Value="NewSpot.Longitude" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Area" class="form-label">Område:</label>
+                <InputText id="Area" @bind-Value="NewSpot.Area" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Properties" class="form-label">Egenskaper:</label>
+                <ul class="list-group">
+                    @if (NewSpot.Properties != null)
+                    {
+                        @foreach (var property in NewSpot.Properties)
+                        {
+                            <li class="list-group-item">@property</li>
+                        }
+                    }
+                </ul>
+                <div class="input-group mt-2">
+                    <InputText @bind-Value="newProperty" class="form-control" placeholder="Lägg till ny egenskap" />
+                    <button class="btn btn-primary" @onclick="AddProperty">Lägg till</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Spara</button>
+            <button type="button" class="btn btn-danger ms-2" @onclick="() => DeleteSpot(NewSpot)">Ta bort</button>
+        </EditForm>
+    </div>
+</div>
+
+
+@code {
+    private SpotDTO NewSpot = new SpotDTO();
+    private List<SpotDTO> spots = new List<SpotDTO>();
+    private string newWindDirection;
+    private string newProperty;
+    private string ErrorMessage { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        spots.AddRange(await spotService.GetAllSpots());
+    }
+
+
+    private void AddGoodWindDirection()
+    {
+        if (!string.IsNullOrWhiteSpace(newWindDirection))
         {
-            <li>@prop</li>
+            NewSpot.WindDirectionGood.Add(newWindDirection);
+            newWindDirection = string.Empty;
         }
-    </ul> *@
-    @* <button class="btn btn-primary" @onclick="() => DeleteProduct(editProduct)">Delete</button> *@
-</EditForm>
+    }
 
-
-
-    @code {
-        private SpotDTO NewSpot = new SpotDTO();
-        private List<SpotDTO> spots = new List<SpotDTO>();
-        private string property;
-
-        private string ErrorMessage { get; set; }
-
-
-       protected override async Task OnInitializedAsync()
+    private void AddOkWindDirection()
+    {
+        if (!string.IsNullOrWhiteSpace(newWindDirection))
         {
-            spots.AddRange(await spotService.GetAllSpots());
+            NewSpot.WindDirectionOk.Add(newWindDirection);
+            newWindDirection = string.Empty;
+        }
+    }
+
+    private void AddBadWindDirection()
+    {
+        if (!string.IsNullOrWhiteSpace(newWindDirection))
+        {
+            NewSpot.WindDirectionBad.Add(newWindDirection);
+            newWindDirection = string.Empty;
+        }
+    }
+
+    private void AddProperty()
+    {
+        if (!string.IsNullOrWhiteSpace(newProperty))
+        {
+            NewSpot.Properties.Add(newProperty);
+            newProperty = string.Empty;
+        }
+    }
+
+    private async Task SaveSpot()
+    {
+        // Perform validation if needed
+        if (string.IsNullOrWhiteSpace(NewSpot.Name) || string.IsNullOrWhiteSpace(NewSpot.Description))
+        {
+            ErrorMessage = "Name and Description are required.";
+            return;
         }
 
-        private void AddWindDirection()
+        if(NewSpot.Id == 0)
         {
-            if (!string.IsNullOrWhiteSpace(property))
+            var result = await spotService.CreateSpot(NewSpot);
+            if (result is null)
             {
-                NewSpot.WindDirectionGood.Add(property);
-                property = string.Empty; // Clear input after adding
-            }
-        }
-
-        private void AddProperty()
-        {
-            if (!string.IsNullOrWhiteSpace(property))
-            {
-                NewSpot.Properties.Add(property);
-                property = string.Empty; // Clear input after adding
-            }
-        }
-
-        private void SaveSpot()
-        {
-            // Perform validation if needed
-            if (string.IsNullOrWhiteSpace(NewSpot.Name) || string.IsNullOrWhiteSpace(NewSpot.Description))
-            {
-                ErrorMessage = "Name and Description are required.";
+                ErrorMessage = "Failed to save spot.";
                 return;
             }
-
-            // Call a method to save the spot using spot DTO
-            // For example: spotService.SaveSpot(spot);
-            ErrorMessage = null; // Clear error message if save is successful
         }
-
-        private void SelectSpot(SpotDTO spot)
+        else
         {
-            throw new NotImplementedException();
+           var result = await spotService.UpdateSpot(NewSpot);
+            if (result is null)
+            {
+                ErrorMessage = "Failed to save spot.";
+                return;
+            }
         }
-
+        ErrorMessage = null;
     }
+
+    private void SelectSpot(SpotDTO spot)
+    {
+        NewSpot = spot;
+    }
+
+    private Task DeleteSpot(SpotDTO newSpot)
+    {
+        throw new NotImplementedException();
+    }
+
+}

@@ -1,0 +1,17 @@
+﻿@media (min-width: 576px) {
+    .row-cols-1 {
+        column-count: 2; /* Display cards in 2 columns on small screens */
+    }
+}
+
+@media (min-width: 768px) {
+    .row-cols-1 {
+        column-count: 3; /* Display cards in 3 columns on medium screens */
+    }
+}
+
+@media (min-width: 992px) {
+    .row-cols-1 {
+        column-count: 4; /* Display cards in 4 columns on large screens */
+    }
+}
