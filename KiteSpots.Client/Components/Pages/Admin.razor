@@ -1,11 +1,115 @@
 ﻿@page "/Admin"
 @using Microsoft.AspNetCore.Authorization
+@using Common.DTO
+@using System.Collections.Generic
+@using KiteSpots.Client.Services
 @rendermode InteractiveServer
+@inject SpotService spotService
 
 @attribute [Authorize(Roles = "Admin")]
 
-<h1>Welcome to admin page!</h1>
+<h1>Admin</h1>
 
-@code {
-    
-}
+<h3>Existing spots</h3>
+
+<Virtualize Items="spots" Context="spot">
+    <div class="col-md-3 mb-4">
+    <div class="card">
+        <div class="card-body">
+            <label>Spot Name></label>
+            <h5 class="card-title"><button class="btn btn-primary" @onclick="() => SelectSpot(spot)">@spot.Name</button></h5>
+        </div>
+    </div>
+    </div>
+    </Virtualize>
+
+<h3>New Spot</h3>
+<EditForm FormName="ProductForm" Model="NewSpot" OnValidSubmit="SaveSpot">
+    <label>Name</label>
+    <InputText @bind-Value="NewSpot.Name"></InputText>
+    <label>Description</label>
+    <InputText @bind-Value="NewSpot.Description"></InputText>
+    <label>Image</label>
+    <InputText @bind-Value="NewSpot.Image"></InputText>
+    <label>Wind Directions</label>
+    <label>Good Wind Directions</label>
+    <InputText @bind-Value="property"></InputText>
+    <button @onclick="AddWindDirection">Add</button>
+    <label>Ok Wind Directions</label>
+    <InputText @bind-Value="property"></InputText>
+    <button @onclick="AddWindDirection">Add</button>
+    <label>Bad Wind Directions</label>
+    <InputText @bind-Value="property"></InputText>
+    <button @onclick="AddWindDirection">Add</button>
+    <label>Latitude</label>
+    <InputNumber @bind-Value="NewSpot.Latitude"></InputNumber>
+    <label>Longitude</label>
+    <InputNumber @bind-Value="NewSpot.Longitude"></InputNumber>
+    <label>Area</label>
+    <InputText @bind-Value="NewSpot.Area"></InputText>
+    <label>Properties</label>
+    <InputText @bind-Value="property"></InputText>
+    <button @onclick="AddProperty">Add</button>
+    <button class="btn btn-primary" type="submit">Add or Change</button>
+ @*    <ul>
+        @foreach (var prop in SelectedSpot.Properties)
+        {
+            <li>@prop</li>
+        }
+    </ul> *@
+    @* <button class="btn btn-primary" @onclick="() => DeleteProduct(editProduct)">Delete</button> *@
+</EditForm>
+
+
+
+    @code {
+        private SpotDTO NewSpot = new SpotDTO();
+        private List<SpotDTO> spots = new List<SpotDTO>();
+        private string property;
+
+        private string ErrorMessage { get; set; }
+
+
+       protected override async Task OnInitializedAsync()
+        {
+            spots.AddRange(await spotService.GetAllSpots());
+        }
+
+        private void AddWindDirection()
+        {
+            if (!string.IsNullOrWhiteSpace(property))
+            {
+                NewSpot.WindDirectionGood.Add(property);
+                property = string.Empty; // Clear input after adding
+            }
+        }
+
+        private void AddProperty()
+        {
+            if (!string.IsNullOrWhiteSpace(property))
+            {
+                NewSpot.Properties.Add(property);
+                property = string.Empty; // Clear input after adding
+            }
+        }
+
+        private void SaveSpot()
+        {
+            // Perform validation if needed
+            if (string.IsNullOrWhiteSpace(NewSpot.Name) || string.IsNullOrWhiteSpace(NewSpot.Description))
+            {
+                ErrorMessage = "Name and Description are required.";
+                return;
+            }
+
+            // Call a method to save the spot using spot DTO
+            // For example: spotService.SaveSpot(spot);
+            ErrorMessage = null; // Clear error message if save is successful
+        }
+
+        private void SelectSpot(SpotDTO spot)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
