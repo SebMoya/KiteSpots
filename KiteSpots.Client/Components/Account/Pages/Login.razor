@@ -41,6 +41,10 @@
                             <div>
                                 <button type="submit" id="login-button" class="w-100 btn btn-lg btn-primary">Logga in</button>
                             </div>
+                            <p>
+                                Registrera dig här
+                                @* <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Registrera dig här</a> *@
+                            </p>
                         </EditForm>
                     </section>
                 </div>

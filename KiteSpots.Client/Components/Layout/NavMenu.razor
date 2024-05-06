@@ -81,7 +81,17 @@
             </ul>
         </div>
     </div>
-    <a class="text-white ml-1 text-decoration-none" href="Auth"><h4>Logga in</h4></a>
+    <AuthorizeView>
+    <Authorized>
+            <div class="btn btn-success active-user">
+                Admin<span></span>
+            </div>
+            <NavLink class="nav-link text-white" href="/Logout">Logga ut</NavLink>
+    </Authorized>
+    <NotAuthorized>
+            <NavLink class="nav-link text-white" href="/Account/Login">Logga in</NavLink>
+    </NotAuthorized>
+    </AuthorizeView>
 </div>
 
 @code {
