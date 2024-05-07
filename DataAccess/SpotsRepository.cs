@@ -48,6 +48,7 @@ public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
         spot.Latitude = updatedSpot.Latitude;
         spot.Longitude = updatedSpot.Longitude;
         spot.Area = updatedSpot.Area;
+        spot.County = updatedSpot.County;
 
         await _context.SaveChangesAsync();
         return spot;

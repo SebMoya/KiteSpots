@@ -12,33 +12,36 @@
 
 <h3>Spottar</h3>
 
-<div class="row row-cols-1 g-3">
-    <Virtualize Items="spots" Context="spot">
+<div class="row row-cols-5 g-3">
+    @foreach (var spot in spots)
+    {
         <div class="col">
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">@spot.Name</h5>
-                    <p class="card-text">@spot.Description</p>
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-primary" @onclick="() => SelectSpot(spot)">Ändra information</button>
                 </div>
             </div>
         </div>
-        @* div class="col-lg-4 mb-4">
-        <div class="list-group">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><button class="btn-light" @onclick="() => SelectSpot(spot)">@spot.Name</button></h5>
-            </div>
-        </div>
-    </div> *@
-    </Virtualize>
+    }
 </div>
+
+
 
 <h3>Ändra/Lägg till</h3>
 <div class="col-lg-6">
     <div class="card p-3">
-        <h3 class="fw-bold mb-4">Ändra information om spot</h3>
+        @if (NewSpot.Id != 0)
+        {
+            <h3 class="fw-bold mb-4">Ändra information om spot</h3>
+            <button class="btn btn-primary mb-3" @onclick="() => NewSpot = new SpotDTO()">Ångra val</button>
+        }
+        else
+        {
+            <h3 class="fw-bold mb-4">Lägg till ny spot</h3>
+        }
 
         <EditForm Model="NewSpot" OnValidSubmit="SaveSpot">
             <DataAnnotationsValidator />
@@ -62,19 +65,19 @@
                 <label class="form-label">Vindriktningar:</label>
                 <div class="row">
                     <div class="col">
-                        @*change to inputselect with options for properties!*@
                         <label for="GoodWindDirections" class="form-label">Bra vindriktningar:</label>
                         <ul class="list-group">
                             @if (NewSpot.WindDirectionGood != null)
                             {
                                 @foreach (var windDirection in NewSpot.WindDirectionGood)
                                 {
-                                    <li class="list-group-item">@windDirection</li>
+                                    <li class="list-group-item">@windDirection<button class="btn btn-danger float-end" @onclick="() => NewSpot.WindDirectionGood.Remove(windDirection)">Ta bort</button></li>
+
                                 }
                             }
                         </ul>
                         <div class="input-group mt-2">
-                            <InputText @bind-Value="newWindDirection" class="form-control" placeholder="Lägg till ny bra vindriktning"/>
+                            <InputText @bind-Value="newWindDirection" class="form-control" placeholder="Lägg till ny bra vindriktning" />
                             <button class="btn btn-primary" @onclick="AddGoodWindDirection">Lägg till</button>
                         </div>
                     </div>
@@ -86,7 +89,8 @@
                             {
                                 @foreach (var windDirection in NewSpot.WindDirectionOk)
                                 {
-                                    <li class="list-group-item">@windDirection</li>
+                                    <li class="list-group-item">@windDirection<button class="btn btn-danger float-end" @onclick="() => NewSpot.WindDirectionOk.Remove(windDirection)">Ta bort</button></li>
+
                                 }
                             }
                         </ul>
@@ -103,7 +107,8 @@
                             {
                                 @foreach (var windDirection in NewSpot.WindDirectionBad)
                                 {
-                                    <li class="list-group-item">@windDirection</li>
+                                    <li class="list-group-item">@windDirection<button class="btn btn-danger float-end" @onclick="() => NewSpot.WindDirectionBad.Remove(windDirection)">Ta bort</button></li>
+
                                 }
                             }
                         </ul>
@@ -111,7 +116,7 @@
                             <InputText @bind-Value="newWindDirection" class="form-control" placeholder="Lägg till ny ok vindriktning" />
                             <button class="btn btn-primary" @onclick="AddBadWindDirection">Lägg till</button>
                         </div>
-                
+
                     </div>
                 </div>
             </div>
@@ -132,13 +137,18 @@
             </div>
 
             <div class="mb-3">
+                <label for="County" class="form-label">Län:</label>
+                <InputText id="County" @bind-Value="NewSpot.County" class="form-control" />
+            </div>
+
+            <div class="mb-3">
                 <label for="Properties" class="form-label">Egenskaper:</label>
                 <ul class="list-group">
                     @if (NewSpot.Properties != null)
                     {
                         @foreach (var property in NewSpot.Properties)
                         {
-                            <li class="list-group-item">@property</li>
+                            <li class="list-group-item">@property<button class="btn btn-danger float-end" @onclick="() => NewSpot.Properties.Remove(property)">Ta bort</button></li>
                         }
                     }
                 </ul>
@@ -149,7 +159,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Spara</button>
-            <button type="button" class="btn btn-danger ms-2" @onclick="() => DeleteSpot(NewSpot)">Ta bort</button>
+            <button type="button" class="btn btn-danger ms-2" @onclick="() => DeleteSpot(NewSpot)">Ta bort spotten</button>
         </EditForm>
     </div>
 </div>
@@ -167,7 +177,6 @@
     {
         spots.AddRange(await spotService.GetAllSpots());
     }
-
 
     private void AddGoodWindDirection()
     {
@@ -214,7 +223,7 @@
             return;
         }
 
-        if(NewSpot.Id == 0)
+        if (NewSpot.Id == 0)
         {
             var result = await spotService.CreateSpot(NewSpot);
             if (result is null)
@@ -225,7 +234,7 @@
         }
         else
         {
-           var result = await spotService.UpdateSpot(NewSpot);
+            var result = await spotService.UpdateSpot(NewSpot);
             if (result is null)
             {
                 ErrorMessage = "Failed to save spot.";

@@ -23,4 +23,6 @@ public class SpotDTO
     public double Longitude { get; set; }
 
     public string Area { get; set; }
+
+    public string County { get; set; }
 }

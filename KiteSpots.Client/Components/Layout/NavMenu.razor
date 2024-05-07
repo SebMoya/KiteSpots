@@ -3,81 +3,53 @@
 @inject NavigationManager NavigationManager
 @inject SpotService spotService
 
-<div class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a href="/">
+<div class="navbar navbar-expand-lg navbar-dark bg-primary fs-3">
+    <a class="text-decoration-none" href="/">
         <h1 class="text-white mr-3">Spotguide</h1>
     </a>
-    <div class="container">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <label for="Area">Välj område</label>
-                <select name="Area" id="AreaSelector">
-                    @foreach (var spot in spots)
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <label for="AreaSelector" class="text-white mr-2">Område:</label>
+                <select name="Area" id="AreaSelector" class="form-control mr-3">
+                    <option value="Alla">Alla</option>
+                    @foreach (var area in areas)
                     {
-                        <option value="@spot.Area">@spot.Area</option>
+                        <option value="@area">@area</option>
                     }
                 </select>
-                <li class="nav-item">
-                    <form class="form-inline">
-                        @foreach (var spot in spots)
+            </li>
+            <li class="nav-item">
+                <label for="WindSelector" class="text-white mr-2">Vindriktning:</label>
+                <select name="Direction" id="WindSelector" class="form-control mr-3">
+                    <option value="Alla">Alla</option>
+                    @foreach (var direction in windDirections)
+                    {
+                        <option value="@direction">@direction</option>
+                    }
+                </select>
+            </li>
+            <li class="nav-item">
+                <div class="property-container">
+                    <label class="text-white">Egenskaper:</label>
+                    <form id="propertySelector" class="form-inline">
+                        @foreach (var property in properties)
                         {
-                            foreach (var property in spot.Properties)
-                            {
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="@($"propCheckbox_{property}")">
-                                    <label class="form-check-label" for="@($"propCheckbox_{property}")">@property</label>
-                                </div>
-                            }
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="@($"propCheckbox_{property}")">
+                                <label class="form-check-label" for="@($"propCheckbox_{property}")">@property</label>
+                            </div>
                         }
                     </form>
-                </li>
-                <li class="nav-item">
-                    <form class="form-inline">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="AllCheckbox" checked>
-                            <label class="form-check-label" for="AllCheckbox">Alla</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="southwestCheckbox">
-                            <label class="form-check-label" for="sandyCheckbox">SV</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="southCheckbox">
-                            <label class="form-check-label" for="scenicCheckbox">S</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="southEastCheckbox">
-                            <label class="form-check-label" for="relaxingCheckbox">SO</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="eastCheckbox">
-                            <label class="form-check-label" for="sandyCheckbox">O</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="northEastCheckbox">
-                            <label class="form-check-label" for="sandyCheckbox">NO</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="northCheckbox">
-                            <label class="form-check-label" for="scenicCheckbox">N</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="northWestCheckbox">
-                            <label class="form-check-label" for="relaxingCheckbox">NV</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="westCheckbox">
-                            <label class="form-check-label" for="relaxingCheckbox">V</label>
-                        </div>
-                    </form>
-                </li>
-            </ul>
-        </div>
+                </div>
+            </li>
+        </ul>
     </div>
+
     <AuthorizeView>
         <Authorized>
             <div class="btn btn-success active-user">
@@ -93,10 +65,16 @@
 
 @code {
     private List<SpotDTO> spots = new List<SpotDTO>();
+    private List<string> areas = new List<string>();
+    private List<string> properties = new List<string>();
+    private List<string> windDirections = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
         spots.AddRange(await spotService.GetAllSpots());
+        areas = spots.Select(s => s.Area).Distinct().ToList();
+        properties = spots.SelectMany(s => s.Properties).Distinct().ToList();
+        windDirections = spots.SelectMany(s => s.WindDirectionGood).Distinct().ToList();
     }
 }
 
