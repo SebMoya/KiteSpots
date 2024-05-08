@@ -39,15 +39,18 @@
                     <h4>Wind Directions:</h4>
                     <div class="wind-direction-circle">
                         <svg width="300" height="300">
-                            <!-- Define the center point of the circle -->
                             <circle cx="150" cy="150" r="120" fill="lightblue" />
 
-                            <!-- Calculate positions for each wind direction -->
                             @foreach (var direction in new List<string> { "N", "NO", "O", "SO", "S", "SV", "V", "NV" })
                             {
+                                @*måste hitta något sätt att räkna ut position*@
+
+                                @* roterar hela bilden blir fel..
                                 <g transform="rotate(@(GetRotationAngle(direction)))">
                                     <image href="@GetArrowImage(direction)" x="140" y="40" width="40" height="40" />
                                 </g>
+                                *@
+                                <image href="@GetArrowImage(direction)" x="100" y="100" width="40" height="40" />
                             }
                         </svg>
                     </div>
@@ -80,22 +83,22 @@
         SelectedSpot = null;
     }
 
-    private double GetRotationAngle(string direction)
-    {
-    // Calculate rotation angle based on wind direction (in degrees)
-        switch (direction)
-        {
-            case "N": return 0;
-            case "NO": return 45;
-            case "O": return 90;
-            case "SO": return 135;
-            case "S": return 180;
-            case "SV": return 225;
-            case "V": return 270;
-            case "NV": return 315;
-            default: return 0;
-        }
-    }
+    // roterar bild
+    // private double GetRotationAngle(string direction)
+    // {
+    //     switch (direction)
+    //     {
+    //         case "N": return 0;
+    //         case "NO": return 45;
+    //         case "O": return 90;
+    //         case "SO": return 135;
+    //         case "S": return 180;
+    //         case "SV": return 225;
+    //         case "V": return 270;
+    //         case "NV": return 315;
+    //         default: return 0;
+    //     }
+    // }
 
     private string GetArrowImage(string direction)
     {
@@ -106,7 +109,6 @@
         }
         else
         {
-    // Handle undefined or invalid wind direction with a placeholder image
             return null;
         }
     }
@@ -118,19 +120,19 @@
         {
             if (SelectedSpot.WindDirectionGood.Contains(direction))
             {
-                return "G"; // Good wind direction
+                return "G";
             }
             else if (SelectedSpot.WindDirectionOk.Contains(direction))
             {
-                return "Y"; // Okay wind direction
+                return "Y";
             }
             else if (SelectedSpot.WindDirectionBad.Contains(direction))
             {
-                return "R"; // Bad wind direction
+                return "R";
             }
         }
 
-        return ""; // Default or undefined wind direction
+        return "";
     }
 }
 
