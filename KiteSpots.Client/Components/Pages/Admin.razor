@@ -216,7 +216,6 @@
 
     private async Task SaveSpot()
     {
-        // Perform validation if needed
         if (string.IsNullOrWhiteSpace(NewSpot.Name) || string.IsNullOrWhiteSpace(NewSpot.Description))
         {
             ErrorMessage = "Name and Description are required.";

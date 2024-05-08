@@ -6,52 +6,131 @@
 
 <PageTitle>Spotguide</PageTitle>
 
-<div class="container">
-    <div class="row">
-        <Virtualize Items="spots" Context="spot">
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <label>Spot Name</label>
-                        <h5 class="card-title">@spot.Name</h5>
-                        <label>Description</label>
-                        <p class="card-text">
-                            @spot.Description</p>
-                            <label>Spot properties</label>
-                            @foreach (var prop in spot.Properties)
+<h1>Spot List</h1>
+
+@foreach (var spot in spots)
+{
+    <ul>
+        <button type="button" class="btn btn-link" @onclick="() => ShowSpotDetails(spot)">@spot.Name</button>
+    </ul>
+}
+@if (SelectedSpot != null)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@SelectedSpot.Name</h5>
+                    <button type="button" class="close" @onclick="CloseModal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Description:</strong> @SelectedSpot.Description</p>
+                    <p><strong>Area:</strong> @SelectedSpot.Area</p>
+                    <p><strong>County:</strong> @SelectedSpot.County</p>
+                    <h4>Spot Properties:</h4>
+                    <ul>
+                        @foreach (var prop in SelectedSpot.Properties)
+                        {
+                            <li>@prop</li>
+                        }
+                    </ul>
+                    <h4>Wind Directions:</h4>
+                    <div class="wind-direction-circle">
+                        <svg width="300" height="300">
+                            <!-- Define the center point of the circle -->
+                            <circle cx="150" cy="150" r="120" fill="lightblue" />
+
+                            <!-- Calculate positions for each wind direction -->
+                            @foreach (var direction in new List<string> { "N", "NO", "O", "SO", "S", "SV", "V", "NV" })
                             {
-                            <p class="card-text">@prop</p>
+                                <g transform="rotate(@(GetRotationAngle(direction)))">
+                                    <image href="@GetArrowImage(direction)" x="140" y="40" width="40" height="40" />
+                                </g>
                             }
-                            <label>Wind directions</label>
-                            <label>wind great</label>
-                            @foreach (var wind in spot.WindDirectionGood)
-                            {
-                                <p class="card-text">@wind</p>
-                            }
-                            <label>wind ok</label>
-                            @foreach (var wind in spot.WindDirectionOk)
-                            {
-                                <p class="card-text">@wind</p>
-                            }
-                            <label>wind bad</label>
-                            @foreach (var wind in spot.WindDirectionBad)
-                            {
-                                <p class="card-text">@wind</p>
-                            }
-                        <label>Area</label>
-                        <p class="card-text">@spot.Area</p>
+                        </svg>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                </div>
             </div>
-        </Virtualize>
+        </div>
     </div>
-</div>
+}
+
 
 @code {
     private List<SpotDTO> spots = new List<SpotDTO>();
+    private SpotDTO SelectedSpot { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         spots.AddRange(await spotService.GetAllSpots());
     }
+
+    private void ShowSpotDetails(SpotDTO spot)
+    {
+        SelectedSpot = spot;
+    }
+
+    private void CloseModal()
+    {
+        SelectedSpot = null;
+    }
+
+    private double GetRotationAngle(string direction)
+    {
+    // Calculate rotation angle based on wind direction (in degrees)
+        switch (direction)
+        {
+            case "N": return 0;
+            case "NO": return 45;
+            case "O": return 90;
+            case "SO": return 135;
+            case "S": return 180;
+            case "SV": return 225;
+            case "V": return 270;
+            case "NV": return 315;
+            default: return 0;
+        }
+    }
+
+    private string GetArrowImage(string direction)
+    {
+        string suitability = GetWindSuitability(direction);
+        if (!string.IsNullOrEmpty(suitability))
+        {
+            return $"Images/{suitability}/{suitability}-{direction}.png";
+        }
+        else
+        {
+    // Handle undefined or invalid wind direction with a placeholder image
+            return null;
+        }
+    }
+
+
+    private string GetWindSuitability(string direction)
+    {
+        if (SelectedSpot != null)
+        {
+            if (SelectedSpot.WindDirectionGood.Contains(direction))
+            {
+                return "G"; // Good wind direction
+            }
+            else if (SelectedSpot.WindDirectionOk.Contains(direction))
+            {
+                return "Y"; // Okay wind direction
+            }
+            else if (SelectedSpot.WindDirectionBad.Contains(direction))
+            {
+                return "R"; // Bad wind direction
+            }
+        }
+
+        return ""; // Default or undefined wind direction
+    }
 }
+

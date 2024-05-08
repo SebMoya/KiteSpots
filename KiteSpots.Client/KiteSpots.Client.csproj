@@ -18,4 +18,31 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Images\G\G-O.png" />
+    <None Include="wwwroot\Images\G\G-N.png" />
+    <None Include="wwwroot\Images\G\G-NO.png" />
+    <None Include="wwwroot\Images\G\G-NV.png" />
+    <None Include="wwwroot\Images\G\G-S.png" />
+    <None Include="wwwroot\Images\G\G-SO.png" />
+    <None Include="wwwroot\Images\G\G-SV.png" />
+    <None Include="wwwroot\Images\G\G-V.png" />
+    <None Include="wwwroot\Images\R\R-O.png" />
+    <None Include="wwwroot\Images\R\R-N.png" />
+    <None Include="wwwroot\Images\R\R-NO.png" />
+    <None Include="wwwroot\Images\R\R-NV.png" />
+    <None Include="wwwroot\Images\R\R-S.png" />
+    <None Include="wwwroot\Images\R\R-SO.png" />
+    <None Include="wwwroot\Images\R\R-SV.png" />
+    <None Include="wwwroot\Images\R\R-V.png" />
+    <None Include="wwwroot\Images\Y\Y-O.png" />
+    <None Include="wwwroot\Images\Y\Y-N.png" />
+    <None Include="wwwroot\Images\Y\Y-NO.png" />
+    <None Include="wwwroot\Images\Y\Y-NV.png" />
+    <None Include="wwwroot\Images\Y\Y-S.png" />
+    <None Include="wwwroot\Images\Y\Y-SO.png" />
+    <None Include="wwwroot\Images\Y\Y-SV.png" />
+    <None Include="wwwroot\Images\Y\Y-V.png" />
+  </ItemGroup>
+
 </Project>

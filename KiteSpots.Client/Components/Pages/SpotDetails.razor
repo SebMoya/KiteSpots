@@ -1,0 +1,60 @@
+﻿@using Common.DTO
+@inherits ComponentBase
+
+
+<div class="modal fade" id="spotDetailsModal" tabindex="-1" role="dialog" aria-labelledby="spotDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="spotDetailsModalLabel">@Spot.Name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Description:</strong> @Spot.Description</p>
+                <p><strong>Area:</strong> @Spot.Area</p>
+                <p><strong>County:</strong> @Spot.County</p>
+
+                <h4>Spot Properties:</h4>
+                <ul>
+                    @foreach (var prop in Spot.Properties)
+                    {
+                        <li>@prop</li>
+                    }
+                </ul>
+
+                <h4>Wind Directions:</h4>
+                <div>
+                    <h5>Good</h5>
+                    <ul>
+                        @foreach (var wind in Spot.WindDirectionGood)
+                        {
+                            <li>@wind</li>
+                        }
+                    </ul>
+
+                    <h5>OK</h5>
+                    <ul>
+                        @foreach (var wind in Spot.WindDirectionOk)
+                        {
+                            <li>@wind</li>
+                        }
+                    </ul>
+
+                    <h5>Bad</h5>
+                    <ul>
+                        @foreach (var wind in Spot.WindDirectionBad)
+                        {
+                            <li>@wind</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public SpotDTO Spot { get; set; }
+}
