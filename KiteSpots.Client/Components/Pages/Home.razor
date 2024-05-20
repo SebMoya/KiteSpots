@@ -43,14 +43,10 @@
 
                             @foreach (var direction in new List<string> { "N", "NO", "O", "SO", "S", "SV", "V", "NV" })
                             {
-                                @*måste hitta något sätt att räkna ut position*@
-
-                                @* roterar hela bilden blir fel..
                                 <g transform="rotate(@(GetRotationAngle(direction)))">
                                     <image href="@GetArrowImage(direction)" x="140" y="40" width="40" height="40" />
                                 </g>
-                                *@
-                                <image href="@GetArrowImage(direction)" x="100" y="100" width="40" height="40" />
+                               
                             }
                         </svg>
                     </div>
@@ -83,22 +79,21 @@
         SelectedSpot = null;
     }
 
-    // roterar bild
-    // private double GetRotationAngle(string direction)
-    // {
-    //     switch (direction)
-    //     {
-    //         case "N": return 0;
-    //         case "NO": return 45;
-    //         case "O": return 90;
-    //         case "SO": return 135;
-    //         case "S": return 180;
-    //         case "SV": return 225;
-    //         case "V": return 270;
-    //         case "NV": return 315;
-    //         default: return 0;
-    //     }
-    // }
+    private double GetRotationAngle(string direction)
+    {
+        switch (direction)
+        {
+            case "N": return 0;
+            case "NO": return 45;
+            case "O": return 90;
+            case "SO": return 135;
+            case "S": return 180;
+            case "SV": return 225;
+            case "V": return 270;
+            case "NV": return 315;
+            default: return 0;
+        }
+    }
 
     private string GetArrowImage(string direction)
     {
