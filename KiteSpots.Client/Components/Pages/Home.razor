@@ -40,18 +40,10 @@
                     <div class="wind-direction-circle">
                         <svg width="300" height="300">
                             <circle cx="150" cy="150" r="120" fill="lightblue" />
-
                             @foreach (var direction in WindDirections)
                             {
-                                @*måste hitta något sätt att räkna ut position*@
-
-                                @* roterar hela bilden blir fel..
-                                <g transform="rotate(@(GetRotationAngle(direction)))">
-                                    <image href="@GetArrowImage(direction)" x="140" y="40" width="40" height="40" />
-                                </g> *@
-                                calc(direction);
-                                <g transform="rotate(@adjustedX, @adjustedY)">
-                                <image href="@GetArrowImage(direction)" x="140" y="40" width="40" height="40" />
+                                <g transform="rotate(@(GetRotationAngle(direction)) 150 150)">
+                                    <image href="@GetArrowImage(direction)" x="150" y="10" width="40" height="40" transform="translate(-20, 0)" />
                                 </g>
                             }
                         </svg>
@@ -70,8 +62,6 @@
     private List<SpotDTO> spots = new List<SpotDTO>();
     private SpotDTO SelectedSpot { get; set; }
     private List<string> WindDirections = new List<string> { "N", "NO", "O", "SO", "S", "SV", "V", "NV" };
-    private double adjustedX { get; set; }
-    private double adjustedY { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,35 +78,28 @@
         SelectedSpot = null;
     }
 
-    // roterar bild
     private double GetRotationAngle(string direction)
     {
-        switch (direction)
+        return direction switch
         {
-            case "N": return 0;
-            case "NO": return 45;
-            case "O": return 90;
-            case "SO": return 135;
-            case "S": return 180;
-            case "SV": return 225;
-            case "V": return 270;
-            case "NV": return 315;
-            default: return 0;
-        }
+            "N" => 0,
+            "NO" => 45,
+            "O" => 90,
+            "SO" => 135,
+            "S" => 180,
+            "SV" => 225,
+            "V" => 270,
+            "NV" => 315,
+            _ => 0,
+            };
     }
 
     private string GetArrowImage(string direction)
     {
         string suitability = GetWindSuitability(direction);
-        if (!string.IsNullOrEmpty(suitability))
-        {
-            return $"Images/{suitability}/{suitability}-{direction}.png";
-        }
-        else
-        {
-            return null;
-        }
+        return !string.IsNullOrEmpty(suitability) ? $"Images/{suitability}/{suitability}-{direction}.png" : null;
     }
+
 
 
     private string GetWindSuitability(string direction)
@@ -138,16 +121,6 @@
         }
 
         return "";
-    }
-
-    private void calc(string direction)
-    {
-        double angle = GetRotationAngle(direction);
-        double x = 150;
-        double y = 150;
-        double r = 120;
-        double adjustedX = x + r * Math.Cos(angle);
-        double adjustedY = y + r * Math.Sin(angle);
     }
 }
 
