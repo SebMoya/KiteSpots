@@ -6,14 +6,31 @@
 
 <PageTitle>Spotguide</PageTitle>
 
-<h1>Spot List</h1>
+<div class="container">
+    <h1 class="text-center my-4">Spot List</h1>
 
-@foreach (var spot in spots)
-{
-    <ul>
-        <button type="button" class="btn btn-link" @onclick="() => ShowSpotDetails(spot)">@spot.Name</button>
-    </ul>
-}
+    <div class="row">
+        @foreach (var countyGroup in spots.GroupBy(s => s.County).OrderBy(g => g.Key))
+        {
+            <div class="col-md-4">
+                <div class="county-group my-3">
+                    <h3 class="text-center text-primary">@countyGroup.Key</h3>
+                    <ul class="list-unstyled">
+                        @foreach (var spot in countyGroup.OrderBy(s => s.Area))
+                        {
+                        <li class="my-2">
+                            <button type="button" class="btn btn-link w-100 text-left" @onclick="() => ShowSpotDetails(spot)">
+                                @spot.Name,@spot.Area
+                            </button>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
 @if (SelectedSpot != null)
 {
     <div class="modal fade show" style="display: block;" tabindex="-1">
@@ -57,7 +74,6 @@
     </div>
 }
 
-
 @code {
     private List<SpotDTO> spots = new List<SpotDTO>();
     private SpotDTO SelectedSpot { get; set; }
@@ -91,13 +107,13 @@
             "V" => 270,
             "NV" => 315,
             _ => 0,
-            };
+        };
     }
 
     private string GetArrowImage(string direction)
     {
         string suitability = GetWindSuitability(direction);
-        return !string.IsNullOrEmpty(suitability) ? $"Images/{suitability}/{suitability}-{direction}.png" : null;
+        return !string.IsNullOrEmpty(suitability) ? $"Images/{suitability}/{suitability}-N.png" : null;
     }
 
 
