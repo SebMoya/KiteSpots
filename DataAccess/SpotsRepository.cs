@@ -26,7 +26,7 @@ public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
     public async Task<Spot> CreateSpot(Spot newSpot)
     {
         _context.Spots.Add(newSpot);
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
         return newSpot;
     }
 
@@ -50,7 +50,7 @@ public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
         spot.Area = updatedSpot.Area;
         spot.County = updatedSpot.County;
 
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
         return spot;
     }
 
@@ -62,7 +62,7 @@ public class SpotsRepository(KiteSpotsDbContext _context) : ISpotService<Spot>
             return false;
         }
         _context.Spots.Remove(spot);
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
         return true;
     }
 }
