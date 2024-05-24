@@ -6,14 +6,31 @@
 
 <PageTitle>Spotguide</PageTitle>
 
-<h1>Spot List</h1>
+<div class="container">
+    <h1 class="text-center my-4">Spot List</h1>
 
-@foreach (var spot in spots)
-{
-    <ul>
-        <button type="button" class="btn btn-link" @onclick="() => ShowSpotDetails(spot)">@spot.Name</button>
-    </ul>
-}
+    <div class="row">
+        @foreach (var countyGroup in spots.GroupBy(s => s.County).OrderBy(g => g.Key))
+        {
+            <div class="col-md-4">
+                <div class="county-group my-3">
+                    <h3 class="text-center text-primary">@countyGroup.Key</h3>
+                    <ul class="list-unstyled">
+                        @foreach (var spot in countyGroup.OrderBy(s => s.Area))
+                        {
+                        <li class="my-2">
+                            <button type="button" class="btn btn-link w-100 text-left" @onclick="() => ShowSpotDetails(spot)">
+                                @spot.Name,@spot.Area
+                            </button>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
 @if (SelectedSpot != null)
 {
     <div class="modal fade show" style="display: block;" tabindex="-1">
@@ -40,13 +57,11 @@
                     <div class="wind-direction-circle">
                         <svg width="300" height="300">
                             <circle cx="150" cy="150" r="120" fill="lightblue" />
-
-                            @foreach (var direction in new List<string> { "N", "NO", "O", "SO", "S", "SV", "V", "NV" })
+                            @foreach (var direction in WindDirections)
                             {
-                                <g transform="rotate(@(GetRotationAngle(direction)))">
-                                    <image href="@GetArrowImage(direction)" x="140" y="40" width="40" height="40" />
+                                <g transform="rotate(@(GetRotationAngle(direction)) 150 150)">
+                                    <image href="@GetArrowImage(direction)" x="150" y="10" width="40" height="40" transform="translate(-20, 0)" />
                                 </g>
-                               
                             }
                         </svg>
                     </div>
@@ -59,10 +74,10 @@
     </div>
 }
 
-
 @code {
     private List<SpotDTO> spots = new List<SpotDTO>();
     private SpotDTO SelectedSpot { get; set; }
+    private List<string> WindDirections = new List<string> { "N", "NO", "O", "SO", "S", "SV", "V", "NV" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,32 +96,26 @@
 
     private double GetRotationAngle(string direction)
     {
-        switch (direction)
+        return direction switch
         {
-            case "N": return 0;
-            case "NO": return 45;
-            case "O": return 90;
-            case "SO": return 135;
-            case "S": return 180;
-            case "SV": return 225;
-            case "V": return 270;
-            case "NV": return 315;
-            default: return 0;
-        }
+            "N" => 0,
+            "NO" => 45,
+            "O" => 90,
+            "SO" => 135,
+            "S" => 180,
+            "SV" => 225,
+            "V" => 270,
+            "NV" => 315,
+            _ => 0,
+        };
     }
 
     private string GetArrowImage(string direction)
     {
         string suitability = GetWindSuitability(direction);
-        if (!string.IsNullOrEmpty(suitability))
-        {
-            return $"Images/{suitability}/{suitability}-{direction}.png";
-        }
-        else
-        {
-            return null;
-        }
+        return !string.IsNullOrEmpty(suitability) ? $"Images/{suitability}/{suitability}-N.png" : null;
     }
+
 
 
     private string GetWindSuitability(string direction)
